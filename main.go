@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/signal"
 	"runtime"
@@ -21,12 +22,15 @@ type Config struct {
 }
 
 var (
-	BUILD_DATE string
-	VERSION    string
-	REVISION   string
-	config     *getconf.GetConf
-	db         *bolt.DB
-	verbose    bool
+	// BuildDate holds the date the binary was built. It is valued at compile time
+	BuildDate string
+	// Version holds the version number of the build. It is valued at compile time
+	Version string
+	// Revision holds the git revision of the binary. It is valued at compile time
+	Revision string
+	config   *getconf.GetConf
+	db       *bolt.DB
+	verbose  bool
 )
 
 func init() {
@@ -37,7 +41,7 @@ func init() {
 	var err error
 	db, err = bolt.Open(config.GetString("StoreName"), 0600, nil)
 	if err != nil {
-		glog.Fatal(err)
+		log.Fatal(err)
 	}
 }
 

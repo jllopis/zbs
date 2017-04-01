@@ -1,0 +1,20 @@
+// Copyright 2017 Joan Llopis. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+syntax = "proto3";
+package services;
+
+import "google/api/annotations.proto";
+
+message IdMessage {
+	int64 id = 1;
+}
+
+message UuidMessage {
+	string uuid = 1;
+}
+
+message Timestamp {
+	// Representa el tiempo Unix (desde epoch) en UTC
+	int64 seconds = 1; 
+}

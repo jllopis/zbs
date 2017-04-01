@@ -1,0 +1,87 @@
+// Copyright 2017 Joan Llopis. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+syntax = "proto3";
+package services;
+
+import "google/api/annotations.proto";
+import "services/common.proto";
+
+message JobArrayMsg {
+        repeated JobMsg jobs = 1;
+        int32 total = 2;
+}
+
+message JobFilterMsg {
+        int64 offset = 1;
+        int64 limit = 2;
+        int32 active = 3;
+        string name = 4;
+        int64 from = 5;
+        int64 to = 6;
+        JobSortingMsg sorting = 7;
+}
+
+// Sorting fields, every fields accepts 'DESC' or 'ASC'
+message JobSortingMsg {
+        string id = 1;
+        string name = 2;
+        string server = 3;
+}
+
+message JobMsg {
+        int64 id = 1;
+        JobDataMsg jobData = 2;
+}
+
+message JobDataMsg {
+        string active = 1;
+        string name = 2;
+        string server = 3;
+        string mountPoint = 4;
+        repeated ScriptMsg localPreScript = 5;
+        repeated ScriptMsg remotePreScript = 6;
+        repeated ScriptMsg localPostScript = 7;
+        repeated ScriptMsg remotePostScript = 8;
+        string rsyncPath = 9;
+        string rsyncOpts = 10;
+        string rsh = 11;
+        repeated string exclude = 12;
+        repeated string include = 13;
+}
+
+message ScriptMsg {
+        string name = 1;
+        string lang = 2;
+        bytes data = 3;
+}
+
+service ZbsService {
+        rpc ListJobs(JobFilterMsg) returns (JobArrayMsg) {
+                option (google.api.http) = {
+                        get: "/v1/jobs"
+                };
+        }
+        rpc FindJob(IdMessage) returns (JobMsg) {
+                option (google.api.http) = {
+                        get: "/v1/jobs/{id}"
+                };
+        }
+        rpc AddJob(JobMsg) returns (IdMessage) {
+                option (google.api.http) = {
+                        post: "/v1/jobs",
+                        body: "*",
+                };
+        }
+        rpc UpdateJob(JobMsg) returns (JobMsg) {
+                option (google.api.http) = {
+                        put: "/v1/jobs",
+                        body: "*",
+                };
+        }
+        rpc DeleteJob(IdMessage) returns (JobMsg) {
+                option (google.api.http) = {
+                        delete: "/v1/jobs/{id}"
+                };
+        }
+}

@@ -1,3 +1,6 @@
+// Copyright 2017 Joan Llopis. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 package log
 
 import (
@@ -6,6 +9,8 @@ import (
 	"os"
 	"path"
 	"runtime"
+
+	"github.com/jllopis/zbs/version"
 )
 
 var (
@@ -43,13 +48,13 @@ type LogConfig struct {
 }
 
 func init() {
-	serviceName := os.Getenv("AD_NAME")
+	serviceName := version.GetName()
 	defaultLogger = &Log{
 		logger: log.New(os.Stdout,
 			"",
 			log.Ldate|log.Ltime),
 		Service: serviceName,
-		Version: "v0.0.1",
+		Version: version.Get(),
 	}
 }
 
@@ -101,7 +106,9 @@ func Err(str ...interface{}) {
 		}
 		msg = fmt.Sprintf("%s %s=%v", msg, k, v)
 	}
-	msg = fmt.Sprintf("%s msg=%s", msg, data["msg"])
+	if val, ok := data["msg"]; ok {
+		msg = fmt.Sprintf("%s msg=%s", msg, val)
+	}
 	defaultLogger.logger.Printf(msg)
 }
 
@@ -121,7 +128,9 @@ func Info(str ...interface{}) {
 		}
 		msg = fmt.Sprintf("%s %s=%v", msg, k, v)
 	}
-	msg = fmt.Sprintf("%s msg=%s", msg, data["msg"])
+	if val, ok := data["msg"]; ok {
+		msg = fmt.Sprintf("%s msg=%s", msg, val)
+	}
 	defaultLogger.logger.Printf(msg)
 }
 
@@ -133,8 +142,8 @@ func prepareEntry(m []interface{}) map[string]interface{} {
 	if len(m)%2 != 0 {
 		msg = m[0].(string)
 		m = m[1:]
+		data["msg"] = msg
 	}
-	data["msg"] = msg
 	if len(m)%2 != 0 {
 		return data
 	}

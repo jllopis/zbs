@@ -1,3 +1,6 @@
+# Copyright 2017 Joan Llopis. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
 version: '2'
 
 #volumes:
@@ -10,14 +13,18 @@ services:
         zbsskel:
                 build: .
                 environment:
+                        - ZBS_NAME=zbsapi
+                        - ZBS_INTERVAL_TICKER=60
                         - ZBS_PORT=8000
                         - ZBS_GWADDR=localhost
                         - ZBS_STORE_DRIVER=mem
-                        - ZBS_STORE_HOST=db.acb.info
-                        - ZBS_STORE_PORT=5432
-                        - ZBS_STORE_NAME=zbsskeldb
-                        - ZBS_STORE_USER=zbsskeladm
-                        - ZBS_STORE_PASS=00000000
+                        - ZBS_STORE_HOST=.
+                        - ZBS_STORE_NAME=zfs.store.json
+#                        - ZBS_STORE_HOST=db.acb.info
+#                        - ZBS_STORE_PORT=5432
+#                        - ZBS_STORE_NAME=zbsskeldb
+#                        - ZBS_STORE_USER=zbsskeladm
+#                        - ZBS_STORE_PASS=00000000
                 ports:
                         - "8000:8000"
                         - "8123:8123"

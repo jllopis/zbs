@@ -1,0 +1,20 @@
+// Copyright 2017 Joan Llopis. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+syntax = "proto3";
+package services;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+message ServerTimeMessage {
+         int64 value = 1;
+}
+
+service TimeService {
+        rpc GetServerTime(google.protobuf.Empty) returns (ServerTimeMessage) {
+                option (google.api.http) = {
+                        get: "/v1/time"
+                };
+        }
+}

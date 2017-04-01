@@ -1,3 +1,6 @@
+# Copyright 2017 Joan Llopis. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
 .PHONY: help
 .DEFAULT_GOAL := help
 
@@ -15,7 +18,7 @@ COMPOSE=$(shell which docker-compose)
 BINNAME="zbs"
 PROJECT="acb-apis"
 GITPROJECT="zbs"
-ORG_PATH=bitbucket.org/acebsa
+ORG_PATH=github.com/jllopis
 REPO_PATH=$(ORG_PATH)/$(GITPROJECT)
 
 export PATH := $(PWD)/_bin:$(PATH)

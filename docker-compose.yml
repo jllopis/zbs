@@ -1,7 +1,7 @@
 # Copyright 2017 Joan Llopis. All rights reserved.
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
-version: '2'
+version: '3'
 
 #volumes:
 #        zbsdata_test:
@@ -11,7 +11,10 @@ version: '2'
 
 services:
         zbsskel:
-                build: .
+                build:
+                        context: .
+                        args:
+                                version:
                 environment:
                         - ZBS_NAME=zbsapi
                         - ZBS_INTERVAL_TICKER=60

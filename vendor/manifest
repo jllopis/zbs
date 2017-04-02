@@ -415,6 +415,15 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/coreos/go-semver/semver",
+			"repository": "https://github.com/coreos/go-semver",
+			"vcs": "git",
+			"revision": "5e3acbb5668c4c3deb4842615c4098eb61fb6b1e",
+			"branch": "master",
+			"path": "/semver",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/coreos/pkg/flagutil",
 			"repository": "https://github.com/coreos/pkg",
 			"vcs": "git",

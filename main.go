@@ -14,6 +14,7 @@ import (
 	"github.com/jllopis/zbs/log"
 	"github.com/jllopis/zbs/metrics"
 	"github.com/jllopis/zbs/server"
+	"github.com/jllopis/zbs/version"
 )
 
 // Config proporciona la configuración del servicio para ser utilizado por getconf
@@ -29,13 +30,7 @@ type Config struct {
 }
 
 var (
-	// BuildDate holds the date the binary was built. It is valued at compile time
-	BuildDate string
-	// Version holds the version number of the build. It is valued at compile time
-	Version string
-	// Revision holds the git revision of the binary. It is valued at compile time
-	Revision string
-	config   *getconf.GetConf
+	config *getconf.GetConf
 )
 
 func main() {
@@ -54,7 +49,8 @@ func main() {
 	setupSignals()
 
 	log.Info("ZBS service started", "port", config.Get("port"))
-	log.Info("version", Version, "revision", Revision, "build-date", BuildDate)
+	log.Info("ZBS Version", version.Version)
+	log.Info("ZBS API Version", version.APIVersion)
 	log.Info("GetConf", "version", getconf.Version())
 	log.Info("Go", "version", runtime.Version())
 

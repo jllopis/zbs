@@ -48,13 +48,13 @@ type LogConfig struct {
 }
 
 func init() {
-	serviceName := version.GetName()
+	serviceName := version.Name
 	defaultLogger = &Log{
 		logger: log.New(os.Stdout,
 			"",
 			log.Ldate|log.Ltime),
 		Service: serviceName,
-		Version: version.Get(),
+		Version: version.Version,
 	}
 }
 

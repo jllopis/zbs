@@ -7,9 +7,7 @@
 BLDDIR = _build
 BINDIR = _bin
 BLDDATE=$(shell date -u +%Y%m%dT%H%M%S)
-VERSION=$(shell git describe --tags `git rev-list --tags --max-count=1` || echo v0.0.1)
-REVISION=$(shell git rev-list --all --max-count=1 --abbrev-commit)
-LDFLAGS=" -s -X main.BuildDate='${BLDDATE}' -X main.Version='${VERSION}' -X main.Revision='${REVISION}'"
+VERSION ?= $(shell ./scripts/git-version)
 SRCS = $(wildcard *.go ./**/*.go)
 
 DOCKER=$(shell which docker)
@@ -20,6 +18,8 @@ PROJECT="acb-apis"
 GITPROJECT="zbs"
 ORG_PATH=github.com/jllopis
 REPO_PATH=$(ORG_PATH)/$(GITPROJECT)
+
+LDFLAGS=" -s -X $(REPO_PATH)/version.Name=$(BINNAME) -X $(REPO_PATH)/version.Version=$(VERSION)"
 
 export PATH := $(PWD)/_bin:$(PATH)
 
@@ -49,7 +49,7 @@ osx: $(BLDDIR) ## build darwin amd64 binary
 	)
 
 docker: linux ## build a docker image from the linux binary
-	$(DOCKER) build --no-cache -t eu.gcr.io/${PROJECT}/${BINNAME}:${VERSION} .
+	$(DOCKER) build --no-cache --build-arg version=$(VERSION) -t eu.gcr.io/${PROJECT}/${BINNAME}:${VERSION} .
 
 push: docker ## push the generated docker image to google project ${PROJECT} repository
 	gcloud --project=${PROJECT} docker -- push eu.gcr.io/${PROJECT}/${BINNAME}:${VERSION}

@@ -41,8 +41,7 @@ func (sz *ServiceZbs) AddJob(ctx context.Context, job *services.JobMsg) (*servic
 	if sz.Store == nil {
 		return nil, errors.New("service store is nil")
 	}
-	return nil, errors.New("method not implemented")
-	//	return sz.Store.AddJob(x)
+	return sz.Store.AddJob(job)
 }
 
 // UpdateJob actualiza el Job y lo devuelve actualizado

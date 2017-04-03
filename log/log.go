@@ -98,18 +98,10 @@ func Err(str ...interface{}) {
 
 	pc, fl, ln, _ := runtime.Caller(1)
 
-	data := prepareEntry(str)
-	msg := fmt.Sprintf("svc=%s tp=error src=%s:%d fn=%s", defaultLogger.Service, path.Base(fl), ln, path.Base(runtime.FuncForPC(pc).Name()))
-	for k, v := range data {
-		if k == "msg" {
-			continue
-		}
-		msg = fmt.Sprintf("%s %s=%v", msg, k, v)
-	}
-	if val, ok := data["msg"]; ok {
-		msg = fmt.Sprintf("%s msg=%s", msg, val)
-	}
-	defaultLogger.logger.Printf(msg)
+	pre := fmt.Sprintf("svc=%s tp=error src=%s:%d fn=%s", defaultLogger.Service, path.Base(fl), ln, path.Base(runtime.FuncForPC(pc).Name()))
+	data := prepareEntry(pre, str)
+
+	defaultLogger.logger.Printf(data)
 }
 
 // Info publicará información de contexto, no referida a un error.
@@ -120,35 +112,25 @@ func Info(str ...interface{}) {
 
 	pc, fl, ln, _ := runtime.Caller(1)
 
-	data := prepareEntry(str)
-	msg := fmt.Sprintf("svc=%s tp=info src=%s:%d fn=%s", defaultLogger.Service, path.Base(fl), ln, path.Base(runtime.FuncForPC(pc).Name()))
-	for k, v := range data {
-		if k == "msg" {
-			continue
-		}
-		msg = fmt.Sprintf("%s %s=%v", msg, k, v)
-	}
-	if val, ok := data["msg"]; ok {
-		msg = fmt.Sprintf("%s msg=%s", msg, val)
-	}
-	defaultLogger.logger.Printf(msg)
+	pre := fmt.Sprintf("svc=%s tp=info src=%s:%d fn=%s", defaultLogger.Service, path.Base(fl), ln, path.Base(runtime.FuncForPC(pc).Name()))
+	data := prepareEntry(pre, str)
+
+	defaultLogger.logger.Print(data)
 }
 
 // prepareEntry will parse the input params and build a hashmap from them.
 // It will return the string with the message to log
-func prepareEntry(m []interface{}) map[string]interface{} {
+func prepareEntry(pre string, m []interface{}) string {
 	var msg string
-	data := make(map[string]interface{})
 	if len(m)%2 != 0 {
-		msg = m[0].(string)
+		msg = fmt.Sprintf("%s msg=%s", pre, m[0].(string))
 		m = m[1:]
-		data["msg"] = msg
 	}
 	if len(m)%2 != 0 {
-		return data
+		return msg
 	}
 	for i := 0; i < len(m); i = i + 2 {
-		data[m[i].(string)] = m[i+1]
+		msg = fmt.Sprintf("%s %s=%v", msg, m[i].(string), m[i+1])
 	}
-	return data
+	return msg
 }

@@ -68,7 +68,6 @@ func (d *MemStore) initFromFile() error {
 	}
 	d.StoreFile = f
 
-	log.Info("OPENING/CREATING JSON FILE", "filename", d.StoreFileName)
 	// Load Jobs from file
 	dec := json.NewDecoder(f)
 	jobarr := &services.JobArrayMsg{}
@@ -83,6 +82,15 @@ func (d *MemStore) initFromFile() error {
 		for _, j := range jobarr.Jobs {
 			d.Pool[j.GetId()] = j.GetJobData()
 		}
+	} else {
+		// Initialize map
+		d.Pool = make(map[int64]*services.JobDataMsg, 0)
 	}
 	return nil
+}
+
+func (d *MemStore) fsync() error {
+	d.StoreFile.Seek(0, 0)
+	err := json.NewEncoder(d.StoreFile).Encode(d.Pool)
+	return err
 }
